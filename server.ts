@@ -29,6 +29,12 @@ async function startServer() {
   // API endpoint for exam simulation chat
   app.post('/api/chat', async (req, res) => {
     try {
+      if (!process.env.GEMINI_API_KEY) {
+        return res.status(400).json({
+          error: 'Chiave API non configurata! Configura la variabile d\'ambiente GEMINI_API_KEY.',
+        });
+      }
+
       const {
         studentName,
         extractedSubjects,

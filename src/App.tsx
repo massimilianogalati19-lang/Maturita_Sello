@@ -57,7 +57,7 @@ export default function App() {
       data = JSON.parse(rawText);
     } catch {
       data = {
-        error: `Risposta del server non valida (${res.status}). Se hai pubblicato l'app su Vercel, verifica di aver aggiunto la variabile GEMINI_API_KEY nei Settings di Vercel.`,
+        error: `Risposta del server non valida (${res.status}). Se hai pubblicato l'app su Vercel, verifica di aver aggiunto la variabile GEMINI_API_KEY nei Settings di Vercel (Environment Variables).`,
       };
     }
     return data;

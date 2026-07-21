@@ -34,6 +34,13 @@ app.all(['/api/chat', '/chat'], async (req, res) => {
   }
 
   try {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return res.status(400).json({
+        error: 'Chiave API non configurata! Su Vercel devi aggiungere la variabile d\'ambiente GEMINI_API_KEY nei Settings del progetto (Settings -> Environment Variables).',
+      });
+    }
+
     const {
       studentName,
       extractedSubjects,
