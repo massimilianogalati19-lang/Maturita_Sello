@@ -49,6 +49,20 @@ export default function App() {
     return null;
   };
 
+  // Helper to safely parse API response
+  const parseApiResponse = async (res: Response) => {
+    const rawText = await res.text();
+    let data: any = {};
+    try {
+      data = JSON.parse(rawText);
+    } catch {
+      data = {
+        error: `Risposta del server non valida (${res.status}). Se hai pubblicato l'app su Vercel, verifica di aver aggiunto la variabile GEMINI_API_KEY nei Settings di Vercel.`,
+      };
+    }
+    return data;
+  };
+
   // Start exam session
   const handleStartExam = async (name: string, subjects: string[]) => {
     setStudentName(name);
@@ -69,7 +83,7 @@ export default function App() {
         }),
       });
 
-      const data = await res.json();
+      const data = await parseApiResponse(res);
       if (res.ok && data.text) {
         const initialMsg: ChatMessage = {
           id: Date.now().toString(),
@@ -90,9 +104,9 @@ export default function App() {
       } else {
         alert(data.error || 'Si è verificato un errore durante la connessione con la commissione.');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('API Error:', err);
-      alert('Errore di connessione al server.');
+      alert(`Errore di connessione al server: ${err?.message || 'Verifica la configurazione Vercel.'}`);
     } finally {
       setIsLoading(false);
     }
@@ -131,7 +145,7 @@ export default function App() {
         }),
       });
 
-      const data = await res.json();
+      const data = await parseApiResponse(res);
       if (res.ok && data.text) {
         const commMsg: ChatMessage = {
           id: (Date.now() + 1).toString(),
@@ -163,9 +177,9 @@ export default function App() {
       } else {
         alert(data.error || 'Errore di risposta dalla commissione.');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('API Error:', err);
-      alert('Impossibile comunicare con la commissione. Riprova.');
+      alert(`Impossibile comunicare con la commissione: ${err?.message || 'Riprova.'}`);
     } finally {
       setIsLoading(false);
     }
@@ -190,7 +204,7 @@ export default function App() {
         }),
       });
 
-      const data = await res.json();
+      const data = await parseApiResponse(res);
       if (res.ok && data.text) {
         setFeedbackText(data.text);
         setShowFeedbackModal(true);
@@ -211,7 +225,7 @@ export default function App() {
       } else {
         alert(data.error || 'Errore nella generazione del feedback.');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('API Error:', err);
       alert('Impossibile ottenere il feedback dalla commissione.');
     } finally {

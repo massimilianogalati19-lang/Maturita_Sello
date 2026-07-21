@@ -23,19 +23,23 @@ const getGeminiClient = () => {
 };
 
 // Health check endpoint
-app.get(['/api/health', '/health'], (req, res) => {
+app.get(['/api/health', '/health', '/api', '/'], (req, res) => {
   res.json({ status: 'ok', app: 'Il Colloquio — Maturità 2026' });
 });
 
 // Main chat simulation endpoint
-app.post(['/api/chat', '/chat'], async (req, res) => {
+app.all(['/api/chat', '/chat'], async (req, res) => {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Metodo non consentito. Usa POST.' });
+  }
+
   try {
     const {
       studentName,
       extractedSubjects,
       messages,
       requestFinalFeedback,
-    } = req.body;
+    } = req.body || {};
 
     if (!studentName) {
       return res.status(400).json({ error: 'Nome studente mancante' });
