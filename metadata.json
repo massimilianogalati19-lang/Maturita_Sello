@@ -1,0 +1,6 @@
+{
+  "name": "Il Colloquio — Maturità 2026",
+  "description": "Simulatore del colloquio orale dell'esame di maturità per la classe 5ª S del Liceo Artistico Sello secondo l'O.M. 54 del 26 marzo 2026.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
